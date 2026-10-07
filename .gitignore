@@ -1,1 +1,5 @@
 .env
+__pycache__
+temp_audio
+venv
+.DS_store
