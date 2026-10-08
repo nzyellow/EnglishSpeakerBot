@@ -75,22 +75,16 @@ async def handle_voice(message: Message):
         ogg_path = await download_voice(bot, message.voice)
         wav_path = convert_ogg_to_wav(ogg_path)
 
-        # Пполучаем и текст, и определённый язык
+        # Получаем и текст, и определённый язык
         transcript, detected_language = await transcribe_audio(wav_path)
 
         if detected_language == "ru":
             # Если сказано по-русски — показываем оригинал + перевод в скобках
             translation = await translate_to_english(transcript)
-            display_text = f"{transcript}\n({translation})"
-        else:
-            # Если по-английски — показываем как есть, без перевода
-            display_text = transcript
+            await processing_msg.edit_text(f"📍 {transcript}\n({translation}")
 
 
-        #await processing_msg.edit_text(f"📍 {display_text}")
-
-        # Дальше анализ ошибок логично делать только для английской речи —
-        # для русской фразы "ошибок" в английском смысле нет
+        # Дальше анализ ошибок для английской речи 
         if detected_language != "ru":
             corrections = await analyze_errors(transcript)
 
